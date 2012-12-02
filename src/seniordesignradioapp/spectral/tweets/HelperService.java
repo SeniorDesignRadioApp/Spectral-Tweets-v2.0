@@ -86,6 +86,7 @@ public class HelperService extends Service implements LocationListener
 	
 	public static void updateTextFromHelperTweetSent()
 	{
+		Main.twitter.setStatus(stringToTweet);
 		Main.changeText(display_count + "\t auto-tweeting\n" + stringToTweet);
 	}
 	
@@ -195,7 +196,6 @@ public class HelperService extends Service implements LocationListener
 			
 			if (Main.twitter != null)
 			{
-				Main.twitter.setStatus(stringToTweet);
 				handler.post(updateTextTweetSent);
 			}
 			else
