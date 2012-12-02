@@ -182,7 +182,7 @@ public class Main extends Activity
 	}
 
 	/* Responsible for posting new status to Twitter */
-	class PostStatusTask extends AsyncTask<String, Void, String> {
+	static class PostStatusTask extends AsyncTask<String, Void, String> {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
@@ -197,7 +197,6 @@ public class Main extends Activity
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			Toast.makeText(Main.this, result, Toast.LENGTH_LONG).show();
 		}
 
 	}
