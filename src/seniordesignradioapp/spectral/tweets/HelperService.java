@@ -46,7 +46,7 @@ public class HelperService extends Service implements LocationListener
 	private static DecimalFormat lat = new DecimalFormat("00.000000");
 	private static String gps_info = "";
 	private static String wifi_info = "";
-	private static final String hashtag = "#ajd7v-34 ";
+	private static final String hashtag = "#ajd7vF34 ";
 	private static int display_count = 0;
 	
 	private static final ArrayList<Integer> channelNumbers = new ArrayList<Integer> (Arrays.asList(0, 2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462));
