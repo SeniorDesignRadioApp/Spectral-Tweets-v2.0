@@ -1,15 +1,17 @@
 package seniordesignradioapp.spectral.tweets;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 public class Main extends Activity
 {
 	
-	private Intent in;
+	private static Intent in;
 	public static TextView tv1;
 	
     public static void changeText(String msg)
@@ -25,6 +27,16 @@ public class Main extends Activity
         
 		in = new Intent(this, HelperService.class);
         tv1 = (TextView) findViewById(R.id.textView1);
+    }
+    
+    public void startMessages(View view)
+    {
+    	startService(in);
+    }
+    
+    public void stopMessages(View view)
+    {
+    	stopService(in);
     }
 
     @Override
