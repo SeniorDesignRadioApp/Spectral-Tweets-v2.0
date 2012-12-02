@@ -4,5 +4,8 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Michael/workspace/spectral.tweets.Twitter_Test_AppActivity/libs/jtwitter.jar"/>
+	<classpathentry exported="true" kind="lib" path="/spectral.tweets.Twitter_Test_AppActivity/libs/signpost-core-1.2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Michael/workspace/spectral.tweets.Twitter_Test_AppActivity/libs/signpost-commonshttp4-1.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,7 +46,7 @@ public class HelperService extends Service implements LocationListener
 	private static DecimalFormat lat = new DecimalFormat("00.000000");
 	private static String gps_info = "";
 	private static String wifi_info = "";
-	private static final String hashtag = "#ajd7v-34";
+	private static final String hashtag = "#ajd7v-34 ";
 	private static int display_count = 0;
 	
 	private static final ArrayList<Integer> channelNumbers = new ArrayList<Integer> (Arrays.asList(0, 2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462));
@@ -58,21 +57,46 @@ public class HelperService extends Service implements LocationListener
 	private static Map<Integer, String> levels = new HashMap<Integer, String>();
 	private static String empty_channel = "__________";		// 10 spaces
 	private static String stringToTweet = "";
-	private static String stringToDisplay = "";
 	
 	private static final Handler handler = new Handler();
 	
-	private static final Runnable updateText = new Runnable()
+	private static final Runnable updateTextTweetSent = new Runnable()
 	{
 		public void run()
 		{
-			updateTextFromHelper();
+			updateTextFromHelperTweetSent();
 		}
 	};
 	
-	public static void updateTextFromHelper()
+	private static final Runnable updateTextTweetNotSent = new Runnable()
 	{
-		Main.changeText(stringToDisplay);
+		public void run()
+		{
+			updateTextFromHelperTweetNotSent();
+		}
+	};
+	
+	private static final Runnable updateTextNoNewInfo = new Runnable()
+	{
+		public void run()
+		{
+			updateTextFromHelperNoNewInfo();
+		}
+	};
+	
+	public static void updateTextFromHelperTweetSent()
+	{
+		Main.changeText(display_count + "\t auto-tweeting\n" + stringToTweet);
+	}
+	
+	public static void updateTextFromHelperTweetNotSent()
+	{
+		Main.changeText(display_count + "\t auto-tweet not sent");
+	}
+	
+	public static void updateTextFromHelperNoNewInfo()
+	{
+		Main.changeText(display_count + "\t no new GPS info");
 	}
 	
 	public void onCreate()
@@ -168,15 +192,20 @@ public class HelperService extends Service implements LocationListener
 			
 			/* set the final string. should be hashtag, wifi info, and gps info */
 			stringToTweet = hashtag + wifi_info + gps_info;
-			stringToDisplay = display_count + " auto-tweeting:\n" + stringToTweet;
 			
-			/* for now just display the string and make sure this works ok */
-			handler.post(updateText);
+			if (Main.twitter != null)
+			{
+				Main.twitter.setStatus(stringToTweet);
+				handler.post(updateTextTweetSent);
+			}
+			else
+			{
+				handler.post(updateTextTweetNotSent);
+			}
 		}
 		else
 		{
-			stringToDisplay = display_count + "\t no new GPS info";
-			handler.post(updateText);
+			handler.post(updateTextNoNewInfo);
 		}
 	}
 	
