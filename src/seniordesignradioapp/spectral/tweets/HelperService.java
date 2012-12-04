@@ -58,6 +58,16 @@ public class HelperService extends Service implements LocationListener
 	private static Map<Integer, String> levels = new HashMap<Integer, String>();
 	private static String empty_channel = "__________";		// 10 spaces
 	private static String stringToTweet = "";
+	private static String stringToDisplay = "";
+	
+	/* statistics gathering */
+
+	private static int onLocationChanged_count = 0;
+	private static int onLocationChanged_count_old = 0;
+	private static int onLocationChanged_diff = 0;
+	private static int onRecieve_count = 0;
+	private static int onRecieve_count_old = 0;
+	private static int onRecieve_diff = 0;
 	
 	private static final Handler handler = new Handler();
 	
@@ -88,7 +98,7 @@ public class HelperService extends Service implements LocationListener
 	public static void updateTextFromHelperTweetSent()
 	{
 		new Main.PostStatusTask().execute(stringToTweet);
-		Main.changeText(display_count + "\t auto-tweeting\n" + stringToTweet);
+		Main.changeText(stringToDisplay);
 	}
 	
 	public static void updateTextFromHelperTweetNotSent()
@@ -192,8 +202,12 @@ public class HelperService extends Service implements LocationListener
 				}
 			}
 			
-			/* set the final string. should be hashtag, wifi info, and gps info */
+			onLocationChanged_diff = onLocationChanged_count - onLocationChanged_count_old;
+			onLocationChanged_count_old = onLocationChanged_count;
+			onRecieve_diff = onRecieve_count - onRecieve_count_old;
+			onRecieve_count_old = onRecieve_count;
 			stringToTweet = hashtag + wifi_info + gps_info;
+			stringToDisplay = display_count + "\t auto-tweeting\n" + stringToTweet + "\n delta location changes: " + onLocationChanged_diff + "\n delta wifi scans: " + onRecieve_diff;
 			
 			if (Main.twitter != null)
 			{
@@ -233,6 +247,7 @@ public class HelperService extends Service implements LocationListener
 		public void onReceive(Context arg0, Intent arg1)
 		{
 			wifi.startScan();
+			onRecieve_count ++;
 		}
 		
 	}
@@ -257,6 +272,7 @@ public class HelperService extends Service implements LocationListener
 			temp_latitude = 0.0;
 			location_count = 0;
 		}
+		onLocationChanged_count ++;
 	}
 
 	public void onProviderDisabled(String provider)
