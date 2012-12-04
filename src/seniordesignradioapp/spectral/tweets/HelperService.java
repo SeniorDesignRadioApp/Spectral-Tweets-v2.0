@@ -35,7 +35,8 @@ public class HelperService extends Service implements LocationListener
 	
 	private static final int UPDATE_MIN_FREQUENCY_MILLISECONDS = 0;
 	private static final int UPDATE_MIN_DISTANCE_METERS = 0;
-	private static final int TIMER_FREQUENCY = 30 * 1000;
+	private static final int TIMER_FREQUENCY_PRODUCTION = 30 * 1000;
+	private static final int TIMER_FREQUENCY_TESTING = 10 * 1000;
 	private static boolean serviceStarted = false;
 	private static double temp_longitude = 0.0;
 	private static double temp_latitude = 0.0;
@@ -122,7 +123,7 @@ public class HelperService extends Service implements LocationListener
 		init_levels();
 		
 		/* start the timer that will run the function that does all the work */
-		timer.scheduleAtFixedRate(gatherInfoAndTweetIt,  0,  TIMER_FREQUENCY);
+		timer.scheduleAtFixedRate(gatherInfoAndTweetIt,  0,  TIMER_FREQUENCY_TESTING);
 	}
 	
 	public void onDestroy()
