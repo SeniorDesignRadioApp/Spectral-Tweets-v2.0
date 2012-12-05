@@ -59,6 +59,7 @@ public class HelperService extends Service implements LocationListener
 	private static String empty_channel = "__________";		// 10 spaces
 	private static String stringToTweet = "";
 	private static String stringToDisplay = "";
+	private static String networkInfoString = "";
 	
 	/* statistics gathering */
 
@@ -144,6 +145,9 @@ public class HelperService extends Service implements LocationListener
 		/* cancel WIFI updates */
 		unregisterReceiver(receiver);
 		
+		/* stop the timer */
+		timer.cancel();
+		
 		/* tell user that service has stopped */
 		Toast.makeText(getApplicationContext(), "service stopped", Toast.LENGTH_SHORT).show();
 		serviceStarted = false;
@@ -163,6 +167,7 @@ public class HelperService extends Service implements LocationListener
 			
 			/* get WIFI scan results and filter.  we want the strongest signal on each channel */
 			wifi_info = "";
+			networkInfoString = "";
 			wifiScanResults = wifi.getScanResults();
 			it = wifiScanResults.iterator();
 			
@@ -195,6 +200,7 @@ public class HelperService extends Service implements LocationListener
 				if (channel_info[i] != null)
 				{
 					wifi_info += (levels.get(channel_info[i].level) == null ? "0" : levels.get(channel_info[i].level))  + channel_info[i].BSSID.replace(":", "").substring(2, 11);
+					networkInfoString += i +"\t" + channel_info[i].level + "\t" + channel_info[i].BSSID + "\n";
 				}
 				else
 				{
@@ -207,7 +213,7 @@ public class HelperService extends Service implements LocationListener
 			onRecieve_diff = onRecieve_count - onRecieve_count_old;
 			onRecieve_count_old = onRecieve_count;
 			stringToTweet = hashtag + wifi_info + gps_info;
-			stringToDisplay = display_count + "\t auto-tweeting\n" + stringToTweet + "\n delta location changes: " + onLocationChanged_diff + "\n delta wifi scans: " + onRecieve_diff;
+			stringToDisplay = display_count + "\n delta location changes: " + onLocationChanged_diff + "\n delta wifi scans: " + onRecieve_diff + "\n" + networkInfoString + "auto-tweeting:\t" + stringToTweet;
 			
 			if (Main.twitter != null)
 			{
