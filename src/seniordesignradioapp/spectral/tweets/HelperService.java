@@ -165,6 +165,10 @@ public class HelperService extends Service implements LocationListener
 			longitude = lon.format(temp_longitude / location_count).replace(".",  "");
 			gps_info = ((temp_latitude / (double) location_count) > 0 ? "+" : "") + latitude + ((temp_longitude / (double) location_count) > 0 ? "+" : "") + longitude;
 			
+			temp_latitude = 0.0;
+			temp_longitude = 0.0;
+			location_count = 0;
+			
 			/* get WIFI scan results and filter.  we want the strongest signal on each channel */
 			wifi_info = "";
 			networkInfoString = "";
