@@ -37,6 +37,7 @@ public class HelperService extends Service implements LocationListener
 	private static final int UPDATE_MIN_DISTANCE_METERS = 0;
 	private static final int TIMER_FREQUENCY_PRODUCTION = 30 * 1000;
 	private static final int TIMER_FREQUENCY_TESTING = 10 * 1000;
+	private static final int TIMER_FREQUENCY = TIMER_FREQUENCY_TESTING;
 	private static boolean serviceStarted = false;
 	private static double temp_longitude = 0.0;
 	private static double temp_latitude = 0.0;
@@ -60,6 +61,7 @@ public class HelperService extends Service implements LocationListener
 	private static String stringToTweet = "";
 	private static String stringToDisplay = "";
 	private static String networkInfoString = "";
+	private static String runTimeString = "";
 	
 	/* statistics gathering */
 
@@ -69,6 +71,8 @@ public class HelperService extends Service implements LocationListener
 	private static int onRecieve_count = 0;
 	private static int onRecieve_count_old = 0;
 	private static int onRecieve_diff = 0;
+	private static int runTimeMinutes = 0;
+	private static int runTimeSeconds = 0;
 	
 	private static final Handler handler = new Handler();
 	
@@ -134,7 +138,7 @@ public class HelperService extends Service implements LocationListener
 		init_levels();
 		
 		/* start the timer that will run the function that does all the work */
-		timer.scheduleAtFixedRate(gatherInfoAndTweetIt,  0,  TIMER_FREQUENCY_TESTING);
+		timer.scheduleAtFixedRate(gatherInfoAndTweetIt,  0,  TIMER_FREQUENCY);
 	}
 	
 	public void onDestroy()
@@ -216,8 +220,12 @@ public class HelperService extends Service implements LocationListener
 			onLocationChanged_count_old = onLocationChanged_count;
 			onRecieve_diff = onRecieve_count - onRecieve_count_old;
 			onRecieve_count_old = onRecieve_count;
+			
+			runTimeMinutes = (display_count * TIMER_FREQUENCY / 1000) / 60;
+			runTimeSeconds = (display_count * TIMER_FREQUENCY / 1000) % 60;
+			runTimeString = "runtime\t" + runTimeMinutes + ":" + runTimeSeconds + "\n";
 			stringToTweet = hashtag + wifi_info + gps_info;
-			stringToDisplay = display_count + "\n delta location changes: " + onLocationChanged_diff + "\n delta wifi scans: " + onRecieve_diff + "\n" + networkInfoString + "auto-tweeting:\t" + stringToTweet;
+			stringToDisplay = display_count + "\t" + runTimeString + "delta location changes: " + onLocationChanged_diff + "\ndelta wifi scans: " + onRecieve_diff + "\n" + networkInfoString + "auto-tweeting:\t" + stringToTweet;
 			
 			if (Main.twitter != null)
 			{
