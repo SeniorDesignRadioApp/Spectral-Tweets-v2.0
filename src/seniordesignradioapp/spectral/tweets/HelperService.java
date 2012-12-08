@@ -48,7 +48,7 @@ public class HelperService extends Service implements LocationListener
 	private static DecimalFormat lat = new DecimalFormat("00.000000");
 	private static String gps_info = "";
 	private static String wifi_info = "";
-	private static final String hashtag = "#ajd7vF34 ";
+	private static final String hashtag = "#ajd7vF35 ";
 	private static int display_count = 0;
 	
 	private static final ArrayList<Integer> channelNumbers = new ArrayList<Integer> (Arrays.asList(0, 2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462));
@@ -73,6 +73,7 @@ public class HelperService extends Service implements LocationListener
 	private static int onRecieve_diff = 0;
 	private static int runTimeMinutes = 0;
 	private static int runTimeSeconds = 0;
+	private static int tweetCount = 0;
 	
 	private static final Handler handler = new Handler();
 	
@@ -113,7 +114,7 @@ public class HelperService extends Service implements LocationListener
 	
 	public static void updateTextFromHelperNoNewInfo()
 	{
-		Main.changeText(display_count + "\t no new GPS info");
+		Main.changeText(runTimeString + "no new GPS info");
 	}
 	
 	public void onCreate()
@@ -160,9 +161,14 @@ public class HelperService extends Service implements LocationListener
 	static public void doWork()
 	{
 		display_count ++;
+		runTimeMinutes = (display_count * TIMER_FREQUENCY / 1000) / 60;
+		runTimeSeconds = (display_count * TIMER_FREQUENCY / 1000) % 60;
+		runTimeString = "runtime\t" + runTimeMinutes + ":" + runTimeSeconds + "\n";
 		
 		if (location_count > 0)
 		{
+			tweetCount ++;
+			
 			/* format the GPS information */
 			gps_info = "";
 			latitude = lat.format(temp_latitude / location_count).replace(".",  "");
@@ -207,7 +213,7 @@ public class HelperService extends Service implements LocationListener
 			{
 				if (channel_info[i] != null)
 				{
-					wifi_info += (levels.get(channel_info[i].level) == null ? "0" : levels.get(channel_info[i].level))  + channel_info[i].BSSID.replace(":", "").substring(2, 11);
+					wifi_info += (levels.get(channel_info[i].level) == null ? "0" : levels.get(channel_info[i].level))  + channel_info[i].BSSID.replace(":", "").substring(3, 12);
 					networkInfoString += i +"\t" + channel_info[i].level + "\t" + channel_info[i].BSSID + "\n";
 				}
 				else
@@ -220,12 +226,9 @@ public class HelperService extends Service implements LocationListener
 			onLocationChanged_count_old = onLocationChanged_count;
 			onRecieve_diff = onRecieve_count - onRecieve_count_old;
 			onRecieve_count_old = onRecieve_count;
-			
-			runTimeMinutes = (display_count * TIMER_FREQUENCY / 1000) / 60;
-			runTimeSeconds = (display_count * TIMER_FREQUENCY / 1000) % 60;
-			runTimeString = "runtime\t" + runTimeMinutes + ":" + runTimeSeconds + "\n";
+
 			stringToTweet = hashtag + wifi_info + gps_info;
-			stringToDisplay = display_count + "\t" + runTimeString + "delta location changes: " + onLocationChanged_diff + "\ndelta wifi scans: " + onRecieve_diff + "\n" + networkInfoString + "auto-tweeting:\t" + stringToTweet;
+			stringToDisplay = "Tweets:\t" + tweetCount + "\t" + runTimeString + "delta location changes: " + onLocationChanged_diff + "\ndelta wifi scans: " + onRecieve_diff + "\n" + networkInfoString + "auto-tweeting:\t" + stringToTweet;
 			
 			if (Main.twitter != null)
 			{
