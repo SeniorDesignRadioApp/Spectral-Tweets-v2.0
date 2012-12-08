@@ -27,7 +27,7 @@ import android.widget.Toast;
 public class HelperService extends Service implements LocationListener
 {
 
-	private static Timer timer = new Timer();
+	private static Timer timer;
 	private static WifiManager wifi;
 	private static BroadcastReceiver receiver;
 	private static LocationManager location;
@@ -121,6 +121,9 @@ public class HelperService extends Service implements LocationListener
 	{
 		super.onCreate();
 		
+		/* setup the Timer */
+		timer = new Timer();
+		
 		/* setup GPS updates */
 		location = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		location.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_MIN_FREQUENCY_MILLISECONDS, UPDATE_MIN_DISTANCE_METERS, this);
@@ -150,7 +153,7 @@ public class HelperService extends Service implements LocationListener
 		/* cancel WIFI updates */
 		unregisterReceiver(receiver);
 		
-		/* stop the timer */
+		/* destroy the timer */
 		timer.cancel();
 		
 		/* tell user that service has stopped */
