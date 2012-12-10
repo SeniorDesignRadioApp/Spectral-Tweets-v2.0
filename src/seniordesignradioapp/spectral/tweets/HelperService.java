@@ -42,6 +42,7 @@ public class HelperService extends Service implements LocationListener
 	private static double temp_longitude = 0.0;
 	private static double temp_latitude = 0.0;
 	private static int location_count = 0;
+	private static int scan_count = 0;
 	private static String latitude;
 	private static String longitude;
 	private static DecimalFormat lon = new DecimalFormat("000.000000");
@@ -114,7 +115,7 @@ public class HelperService extends Service implements LocationListener
 	
 	public static void updateTextFromHelperNoNewInfo()
 	{
-		Main.changeText(runTimeString + "no new GPS info");
+		Main.changeText(runTimeString + "no new GPS/WIFI info");
 	}
 	
 	public void onCreate()
@@ -168,7 +169,7 @@ public class HelperService extends Service implements LocationListener
 		runTimeSeconds = (display_count * TIMER_FREQUENCY / 1000) % 60;
 		runTimeString = "runtime\t" + runTimeMinutes + ":" + runTimeSeconds + "\n";
 		
-		if ((onLocationChanged_count > 0) && (onRecieve_count > 0))
+		if ((location_count > 0) && (scan_count > 0))
 		{
 			tweetCount ++;
 			
@@ -181,6 +182,7 @@ public class HelperService extends Service implements LocationListener
 			temp_latitude = 0.0;
 			temp_longitude = 0.0;
 			location_count = 0;
+			scan_count = 0;
 			
 			/* get WIFI scan results and filter.  we want the strongest signal on each channel */
 			wifi_info = "";
@@ -272,6 +274,7 @@ public class HelperService extends Service implements LocationListener
 		{
 			wifi.startScan();
 			onRecieve_count ++;
+			scan_count ++;
 		}
 		
 	}
