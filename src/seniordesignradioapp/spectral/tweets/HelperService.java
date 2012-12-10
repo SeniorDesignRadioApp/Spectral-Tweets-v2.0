@@ -168,14 +168,14 @@ public class HelperService extends Service implements LocationListener
 		runTimeSeconds = (display_count * TIMER_FREQUENCY / 1000) % 60;
 		runTimeString = "runtime\t" + runTimeMinutes + ":" + runTimeSeconds + "\n";
 		
-		if (location_count > 0)
+		if ((onLocationChanged_count > 0) && (onRecieve_count > 0))
 		{
 			tweetCount ++;
 			
 			/* format the GPS information */
 			gps_info = "";
-			latitude = lat.format(temp_latitude / location_count).replace(".",  "");
-			longitude = lon.format(temp_longitude / location_count).replace(".",  "");
+			latitude = lat.format(temp_latitude / (double) location_count).replace(".",  "");
+			longitude = lon.format(temp_longitude / (double) location_count).replace(".",  "");
 			gps_info = ((temp_latitude / (double) location_count) > 0 ? "+" : "") + latitude + ((temp_longitude / (double) location_count) > 0 ? "+" : "") + longitude;
 			
 			temp_latitude = 0.0;
